@@ -20,6 +20,13 @@ class Author:
     def __eq__(self, other):
         ''' For simplicity, we're going to assume that no two authors have the same name. '''
         return self.surname == other.surname and self.given_name == other.given_name
+    
+    def __lt__(self, other):
+        if self.surname < other.surname:
+            return True
+        if self.surname == other.surname and self.given_name < other.given_name:
+            return True
+        return False
 
 class Book:
     def __init__(self, title='', publication_year=None, authors=[]):
@@ -35,9 +42,11 @@ class Book:
             thing as "same book". '''
         return self.title == other.title
 
+
 class BooksDataSource:
-    books = []
-    authors = []
+    
+    books_list = []
+    authors_list = []
 
     def __init__(self, books_csv_file_name):
         ''' The books CSV file format looks like this:
@@ -54,20 +63,21 @@ class BooksDataSource:
             a collection of Author objects and a collection of Book objects.
         '''
         
+        
         with open(books_csv_file_name) as f:
             reader = csv.reader(f)
             for row in reader:
                 book = Book(row[0], row[1], row[2])
-                books.append(book)
+                books_list.append(book)
                 split_authors = row[2].split()
                 if len(split_authors) == 3:
                     split_dates = split_authors[2].split('-')
                     author = Author(split_authors[1], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    authors.append(author)
+                    authors_list.append(author)
                 elif len(split_authors) == 4:
                     split_dates = split_authors[3].split('-')
                     author = Author(split_authors[1] + " " + split_authors[2], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    authors.append(author)
+                    authors_list.append(author)
 
     def authors(self, search_text=None):
         ''' Returns a list of all the Author objects in this data source whose names contain
@@ -75,8 +85,17 @@ class BooksDataSource:
             returns all of the Author objects. In either case, the returned list is sorted
             by surname, breaking ties using given name (e.g. Ann Brontë comes before Charlotte Brontë).
         '''
-        #
-        return []
+        print('hello')
+        authors_returned = []
+        if search_text == None:
+            authors_returned = authors_list
+        else:
+            for author in authors_list:
+                if search_text.lower() in (author.given_name.lower() or author.surname.lower()):
+                    authors_returned.append(author)
+
+        return sorted(authors_returned)
+        
 
     def books(self, search_text=None, sort_by='title'):
         ''' Returns a list of all the Book objects in this data source whose
@@ -92,16 +111,16 @@ class BooksDataSource:
         '''
         books_returned = []
         if search_text == None:
-            books_returned = books
+            books_returned = books_list
         else:
-            for book in books:
+            for book in books_list:
                 if search_text.lower() in book.title.lower():
                     books_returned.append(book)
         
-        if sort_by == 'year':
-            books_returned
-        else:
-            books_returned
+        #if sort_by == 'year':
+        #    books_returned
+        #else:
+         #   books_returned
 
         return books_returned
 
@@ -120,11 +139,12 @@ class BooksDataSource:
         '''
         return []
 
-
 def main():
-    BooksDataSource("tinybooks.csv")
+    booksource = BooksDataSource('tinybooks.csv')
 
-if __name__ == "__main__":
+    print(booksource.authors())
+  
+
+
+if __name__ == '__main__':
     main()
-
-
