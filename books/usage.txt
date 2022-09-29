@@ -2,9 +2,9 @@ NAME
 	books.py - displays information given a csv file of books
 
 SYNOPSIS
-	python3 books.py title [-t | -y | -h] S
-	python3 books.py author [-h] S
-	python3 books.py years [-h] A B
+	python3 books.py title [-t | -y] search_string | [-h]
+	python3 books.py author [-h] search_string
+	python3 books.py years [-h] | start_date end_date
 
 DESCRIPTION
 	title:
