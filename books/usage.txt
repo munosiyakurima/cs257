@@ -1,0 +1,28 @@
+NAME
+	books.py - displays information given a csv file of books
+
+SYNOPSIS
+	python3 books.py title [-t | -y | -h] S
+	python3 books.py author [-h] S
+	python3 books.py years [-h] A B
+
+DESCRIPTION
+	title:
+		Given a search string S, print a list of books whose titles contain S (case-insensitive). Books may be sorted by title or by publication year.
+
+	author:
+		Given a search string S, prints a list of authors whose names contain S (case-insensitive). For each such author, prints a list of the author's books. Authors are printed in alphabetical order by surname, breaking ties by using given name (e.g. Ann Brown comes before Charlotte Brown).
+
+	years:
+		Given a range of years A to B, prints a list of books published between years A and B, inclusive. Books are printed in order of publication year.
+
+OPTIONS
+
+General:
+	-h, --help  Prints the usage statement of the CLI
+
+Title options:
+	-t, --title Prints out a list of books sorted by the title in alphabetical order. (DEFAULT)
+	-y, --year  Prints out a list of books sorted by the publication year in chronological order.
+AUTHOR
+	Kyle Machalec and Muno Siyakurima
