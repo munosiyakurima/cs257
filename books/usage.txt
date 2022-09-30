@@ -4,7 +4,7 @@ NAME
 SYNOPSIS
 	python3 books.py title [-t | -y] search_string | [-h]
 	python3 books.py author [-h] search_string
-	python3 books.py years [-h] | start_date end_date
+	python3 books.py years [-h] | <start_date|none end_date|none>
 
 DESCRIPTION
 	title:

@@ -128,10 +128,10 @@ class BooksDataSource:
                 if search_text.lower() in book.title.lower():
                     books_returned.append(book)
         
-        #if sort_by == 'year':
-        #    books_returned
-        #else:
-         #   books_returned
+        if sort_by == 'year':
+            books_returned = self.sorted_publication_year(books_returned)
+        else:
+            books_returned = sorted(books_returned)
 
         return books_returned
 
@@ -162,11 +162,12 @@ class BooksDataSource:
                     publication_books.append(sorted_books[i])
         elif end_year == None:
             sorted_books = self.sorted_publication_year(BooksDataSource.books_list)
-            for i in range(len(sorted_books)-1, 0, -1):
-                if start_year > sorted_books[i].publication_year:
+            for i in range(len(sorted_books)):
+                if start_year <= sorted_books[i].publication_year:
+                    start_index = i
                     break
-                else:
-                    publication_books.append(sorted_books[i])
+            for i in range(start_index, len(sorted_books), 1):
+                publication_books.append(sorted_books[i])
         else:
             sorted_books = self.sorted_publication_year(BooksDataSource.books_list)
             for i in range(len(sorted_books)):
@@ -185,12 +186,13 @@ class BooksDataSource:
 def main():
     booksource = BooksDataSource('tinybooks.csv')
 
-    for obj in booksource.books_between_years(start_year = '1847', end_year = '1996'):
+    for obj in booksource.books_between_years():
         print(obj.title)
-        print(obj.publication_year)
+        #print(obj.publication_year)
 
   
 
 
 if __name__ == '__main__':
     main()
+    exit()
