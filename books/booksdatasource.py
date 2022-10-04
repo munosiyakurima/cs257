@@ -27,6 +27,9 @@ class Author:
         if self.surname == other.surname and self.given_name < other.given_name:
             return True
         return False
+    
+    def __hash__(self):
+        return hash(self.surname + self.given_name)
 
 class Book:
     def __init__(self, title='', publication_year=None, authors=[]):
@@ -47,7 +50,8 @@ class Book:
 
 class BooksDataSource:
     
-    authors_list = []
+    authors_list = {}
+    authors_list = set()
     books_list = []
 
     def __init__(self, books_csv_file_name):
@@ -74,11 +78,11 @@ class BooksDataSource:
                 if len(split_authors) == 3:
                     split_dates = split_authors[2].split('-')
                     author = Author(split_authors[1], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    BooksDataSource.authors_list.append(author)
+                    BooksDataSource.authors_list.add(author)
                 elif len(split_authors) == 4:
                     split_dates = split_authors[3].split('-')
                     author = Author(split_authors[1] + " " + split_authors[2], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    BooksDataSource.authors_list.append(author)
+                    BooksDataSource.authors_list.add(author)
 
     def sorted_publication_year(self, books):
         for b in range (len(books)-1, 0, -1):
@@ -102,7 +106,7 @@ class BooksDataSource:
             authors_returned = BooksDataSource.authors_list
         else:
             for author in BooksDataSource.authors_list:
-                if search_text.lower() in (author.given_name.lower() or author.surname.lower()):
+                if search_text.lower() in author.given_name.lower() or search_text.lower() in author.surname.lower():
                     authors_returned.append(author)
 
         return sorted(authors_returned)
@@ -150,45 +154,27 @@ class BooksDataSource:
         '''
         publication_books = []
 
-        if start_year == None and end_year == None:
+        if start_year == 'none' and end_year == 'none':
             publication_books = BooksDataSource.books_list
-            publication_books = self.sorted_publication_year(publication_books)
-        elif start_year == None:
-            sorted_books = self.sorted_publication_year(BooksDataSource.books_list)
-            for i in range(len(sorted_books)):
-                if end_year < sorted_books[i].publication_year:
-                    break
-                else:
-                    publication_books.append(sorted_books[i])
-        elif end_year == None:
-            sorted_books = self.sorted_publication_year(BooksDataSource.books_list)
-            for i in range(len(sorted_books)):
-                if start_year <= sorted_books[i].publication_year:
-                    start_index = i
-                    break
-            for i in range(start_index, len(sorted_books), 1):
-                publication_books.append(sorted_books[i])
+        elif start_year == 'none':
+            for book in BooksDataSource.books_list:
+                if book.publication_year <= end_year:
+                    publication_books.append(book)
+        elif end_year == 'none':
+            for book in BooksDataSource.books_list:
+                if book.publication_year >= start_year:
+                    publication_books.append(book)
         else:
-            sorted_books = self.sorted_publication_year(BooksDataSource.books_list)
-            for i in range(len(sorted_books)):
-                if start_year <= sorted_books[i].publication_year:
-                    start_index = i
-                    break
-            for i in range(start_index, len(sorted_books)-1, 1):
-                if end_year < sorted_books[i].publication_year:
-                    break
-                else:
-                    publication_books.append(sorted_books[i])
-
-
-        return publication_books
+            for book in BooksDataSource.books_list:
+                if book.publication_year <= end_year and book.publication_year >= start_year:
+                    publication_books.append(book)
+            
+        return self.sorted_publication_year(publication_books)
 
 def main():
     booksource = BooksDataSource('tinybooks.csv')
 
-    for obj in booksource.books_between_years():
-        print(obj.title)
-        #print(obj.publication_year)
+    
 
   
 
