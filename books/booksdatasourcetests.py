@@ -14,7 +14,9 @@ class BooksDataSourceTester(unittest.TestCase):
         self.tiny_data_source = BooksDataSource('tinybooks.csv')
 
     def tearDown(self):
-        pass
+        BooksDataSource.authors_list = {}
+        BooksDataSource.authors_list = set()
+        BooksDataSource.books_list = []
 
     def test_unique_author(self):
         authors = self.tiny_data_source.authors('Pratchett')
@@ -34,10 +36,10 @@ class BooksDataSourceTester(unittest.TestCase):
     def test_unique_book_repeat_title(self):
         books = self.tiny_data_source.books('and')
         self.assertTrue(len(books) == 4)
-        self.assertTrue(books[0] == Book('The Life and Opinions of Tristram Shandy, Gentleman'))
-        self.assertTrue(books[1] == Book('And Then There Were None'))
-        self.assertTrue(books[2] == Book('Boys and Sex'))
-        self.assertTrue(books[3] == Book('Girls and Sex'))
+        self.assertTrue(books[0] == Book('And Then There Were None'))
+        self.assertTrue(books[1] == Book('Boys and Sex'))
+        self.assertTrue(books[2] == Book('Girls and Sex'))
+        self.assertTrue(books[3] == Book('The Life and Opinions of Tristram Shandy, Gentleman'))
 
     def test_all_books(self):
         books = self.tiny_data_source.books()
@@ -55,17 +57,16 @@ class BooksDataSourceTester(unittest.TestCase):
 
     def test_all_authors(self):
         authors = self.tiny_data_source.authors()
-        self.assertTrue(len(authors) == 10)
+        self.assertTrue(len(authors) == 9)
         self.assertTrue(authors[0] == Author('Austen', 'Jane'))
         self.assertTrue(authors[1] == Author('Christie', 'Agatha'))
         self.assertTrue(authors[2] == Author('Gaiman', 'Neil'))
         self.assertTrue(authors[3] == Author('Melville', 'Herman'))
         self.assertTrue(authors[4] == Author('Murakami', 'Haruki'))
         self.assertTrue(authors[5] == Author('Orenstein', 'Peggy'))
-        self.assertTrue(authors[6] == Author('Orenstein', 'Peggy'))
-        self.assertTrue(authors[7] == Author('Pratchett', 'Terry'))
-        self.assertTrue(authors[8] == Author('Sterne', 'Laurence'))
-        self.assertTrue(authors[9] == Author('Willis', 'Connie'))
+        self.assertTrue(authors[6] == Author('Pratchett', 'Terry'))
+        self.assertTrue(authors[7] == Author('Sterne', 'Laurence'))
+        self.assertTrue(authors[8] == Author('Willis', 'Connie'))
 
     def test_all_books_year(self):
         books = self.tiny_data_source.books(sort_by = 'year')
