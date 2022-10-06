@@ -92,13 +92,15 @@ def main(arguments):
             print()
             print(author.surname + ", " + author.given_name)
             for book in booksource.books():
-                names = book.authors.split()
-                if len(names) == 3:
-                    if author.given_name == names[0] and author.surname == names[1]:
-                        print (book.title)
-                else: 
-                    if author.given_name == names[0] and author.surname == (names[1] + " " + names[2]):
-                        print(book.title)
+                multiple_authors = book.authors.split(' and ')
+                for a in multiple_authors:
+                    names = a.split()
+                    if len(names) == 3:
+                        if author.given_name == names[0] and author.surname == names[1]:
+                            print (book.title)
+                    else: 
+                        if author.given_name == names[0] and author.surname == (names[1] + " " + names[2]):
+                            print(book.title)
             
     elif method == 'years':
         start_date = arguments['start_date']

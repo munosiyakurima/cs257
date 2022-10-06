@@ -8,6 +8,8 @@
 '''
 
 import csv
+from operator import attrgetter
+from turtle import title
 
 
 class Author:
@@ -73,27 +75,22 @@ class BooksDataSource:
             reader = csv.reader(f)
             for row in reader:
                 book = Book(row[0], row[1], row[2])
+                #print(book.authors)
                 BooksDataSource.books_list.append(book)
-                split_authors = row[2].split()
-                if len(split_authors) == 3:
-                    split_dates = split_authors[2].split('-')
-                    author = Author(split_authors[1], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    BooksDataSource.authors_list.add(author)
-                elif len(split_authors) == 4:
-                    split_dates = split_authors[3].split('-')
-                    author = Author(split_authors[1] + " " + split_authors[2], split_authors[0], split_dates[0][-4:], split_dates[1][:4])
-                    BooksDataSource.authors_list.add(author)
+                split_authors = row[2].split(' and ')
+                #print(split_authors)
+                for a in split_authors:
+                    split_name = a.split()
+                    if len(split_name) == 3:
+                        split_dates = split_name[2].split('-')
+                        author = Author(split_name[1], split_name[0], split_dates[0][-4:], split_dates[1][:4])
+                        BooksDataSource.authors_list.add(author)
+                    elif len(split_name) == 4:
+                        split_dates = split_name[3].split('-')
+                        author = Author(split_authors[1] + " " + split_name[2], split_name[0], split_dates[0][-4:], split_dates[1][:4])
+                        BooksDataSource.authors_list.add(author)
 
-    def sorted_publication_year(self, books):
-        for b in range (len(books)-1, 0, -1):
-            for i in range(b):
-                if books[i].publication_year > books[i+1].publication_year:
-                    temp = books[i]
-                    books[i] = books[i+1]
-                    books[i+1] = temp
-        return books
-
-
+    
     def authors(self, search_text=None):
         ''' Returns a list of all the Author objects in this data source whose names contain
             (case-insensitively) the search text. If search_text is None, then this method
@@ -133,9 +130,9 @@ class BooksDataSource:
                     books_returned.append(book)
         
         if sort_by == 'year':
-            books_returned = self.sorted_publication_year(books_returned)
+            books_returned = sorted(books_returned, key = attrgetter('publication_year', 'title'))
         else:
-            books_returned = sorted(books_returned)
+            books_returned = sorted(books_returned, key = attrgetter('title', 'publication_year'))
 
         return books_returned
 
@@ -169,7 +166,7 @@ class BooksDataSource:
                 if book.publication_year <= end_year and book.publication_year >= start_year:
                     publication_books.append(book)
             
-        return self.sorted_publication_year(publication_books)
+        return sorted(publication_books, key = attrgetter('publication_year', 'title'))
 
 def main():
     booksource = BooksDataSource('tinybooks.csv')
