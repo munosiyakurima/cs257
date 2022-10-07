@@ -1,5 +1,12 @@
+'''
+    books.py
+    Created by Muno Siyakurima and Kyle Machalec
+
+    For use in the "books" assignment at the beginning of Carleton's
+    CS 257 Software Design class, Fall 2022.
+'''
+
 import sys
-import csv
 import booksdatasource
 
 def usage_statement():
@@ -8,17 +15,21 @@ def usage_statement():
     statement += ' python3 books.py author <search_string>\n'
     statement += ' python3 books.py years <start_date|none> <end_date|none>\n'
     statement += ' python3 books.py -h'
-    exit()
+    return statement
 
 def print_error():
     print("Invalid command line syntax, please check usage statement: python3 books.py -h")
     exit()
 
 def parse_command_line():
+    '''Takes in the command-line arguments entered by the user and assigns them to the appropriate
+    variables. Also handles invalid input entered by the user.'''
+
     arguments = {}
     if len(sys.argv) < 2:
         print(usage_statement())
-    if sys.argv[1] == 'title':
+        exit()
+    if sys.argv[1] == 'title': #If 'title' is the second argument then we expect the user to input the sorting method and the search string or just the search string
         arguments['method'] = sys.argv[1]
         if len(sys.argv) == 2:
             arguments['search_string'] = None
@@ -38,7 +49,8 @@ def parse_command_line():
                 print_error()
         else:
             print_error()
-    elif sys.argv[1] == 'author':
+
+    elif sys.argv[1] == 'author': #If 'author' is the second argument then we expect the user to just type in the search string
         arguments['method'] = sys.argv[1]
         if len (sys.argv) == 2:
             arguments['search_string'] = None
@@ -47,7 +59,7 @@ def parse_command_line():
         else:
             print_error()
 
-    elif sys.argv[1] == 'years':
+    elif sys.argv[1] == 'years': #If 'years' is the second argument then we expect the user to input the start year/none and the end year/none
         if len (sys.argv) < 4:
             print_error()
         elif len(sys.argv) == 4:
@@ -62,17 +74,19 @@ def parse_command_line():
                 print_error()  
         else:
             print_error()
-    elif sys.argv[1] == '-h':
+    elif sys.argv[1] == '-h': #Prints the usage.txt file to the user
         f = open('usage.txt', 'r')
         content = f.read()
         print(content)
         exit()
 
-
     return arguments
 
 def main(arguments):
-    booksource = booksdatasource.BooksDataSource('tinybooks.csv')
+    '''Reads the arguments from the command-line and uses the BooksDataSource methods to 
+    print the necessary information needed by the user'''
+
+    booksource = booksdatasource.BooksDataSource('books1.csv')
     method = arguments['method']
     if method == 'title':
         options = arguments['[-t | -y]']
@@ -83,7 +97,7 @@ def main(arguments):
             title_books = booksource.books(search_text = search, sort_by = 'year')
         
         for book in title_books:
-            print(book.title)
+            print(book.title + ", " + book.publication_year)
 
     elif method == 'author':
         search = arguments['search_string']
@@ -92,13 +106,13 @@ def main(arguments):
             print()
             print(author.surname + ", " + author.given_name)
             for book in booksource.books():
-                multiple_authors = book.authors.split(' and ')
+                multiple_authors = book.authors.split(' and ') #If a book has multiple authors then separate the two
                 for a in multiple_authors:
                     names = a.split()
-                    if len(names) == 3:
+                    if len(names) == 3: #Author has one surname and then print books assocaited with that author
                         if author.given_name == names[0] and author.surname == names[1]:
                             print (book.title)
-                    else: 
+                    else: #Author has two surnames and then print books assocaited with that author
                         if author.given_name == names[0] and author.surname == (names[1] + " " + names[2]):
                             print(book.title)
             

@@ -43,17 +43,18 @@ class BooksDataSourceTester(unittest.TestCase):
 
     def test_all_books(self):
         books = self.tiny_data_source.books()
-        self.assertTrue(len(books) == 10)
+        self.assertTrue(len(books) == 11)
         self.assertTrue(books[0].title == '1Q84')
         self.assertTrue(books[1].title == 'And Then There Were None')
         self.assertTrue(books[2].title == 'Blackout')
         self.assertTrue(books[3].title == 'Boys and Sex')
         self.assertTrue(books[4].title == 'Emma')
         self.assertTrue(books[5].title == 'Girls and Sex')
-        self.assertTrue(books[6].title == 'Neverwhere')
-        self.assertTrue(books[7].title == 'Omoo')
-        self.assertTrue(books[8].title == 'The Life and Opinions of Tristram Shandy, Gentleman')
-        self.assertTrue(books[9].title == 'Thief of Time')
+        self.assertTrue(books[6].title == 'Good Omens')
+        self.assertTrue(books[7].title == 'Neverwhere')
+        self.assertTrue(books[8].title == 'Omoo')
+        self.assertTrue(books[9].title == 'The Life and Opinions of Tristram Shandy, Gentleman')
+        self.assertTrue(books[10].title == 'Thief of Time')
 
     def test_all_authors(self):
         authors = self.tiny_data_source.authors()
@@ -70,17 +71,18 @@ class BooksDataSourceTester(unittest.TestCase):
 
     def test_all_books_year(self):
         books = self.tiny_data_source.books(sort_by = 'year')
-        self.assertTrue(len(books) == 10)
+        self.assertTrue(len(books) == 11)
         self.assertTrue(books[0].title == 'The Life and Opinions of Tristram Shandy, Gentleman')
         self.assertTrue(books[1].title == 'Emma')
         self.assertTrue(books[2].title == 'Omoo')
         self.assertTrue(books[3].title == 'And Then There Were None')
-        self.assertTrue(books[4].title == 'Neverwhere')
-        self.assertTrue(books[5].title == 'Thief of Time')
-        self.assertTrue(books[6].title == '1Q84')
-        self.assertTrue(books[7].title == 'Blackout')
-        self.assertTrue(books[8].title == 'Girls and Sex')
-        self.assertTrue(books[9].title == 'Boys and Sex')
+        self.assertTrue(books[4].title == 'Good Omens')
+        self.assertTrue(books[5].title == 'Neverwhere')
+        self.assertTrue(books[6].title == 'Thief of Time')
+        self.assertTrue(books[7].title == '1Q84')
+        self.assertTrue(books[8].title == 'Blackout')
+        self.assertTrue(books[9].title == 'Girls and Sex')
+        self.assertTrue(books[10].title == 'Boys and Sex')
 
     def test_between_two_years(self):
         books_between_years = self.tiny_data_source.books_between_years(start_year = '1814', end_year = '1939')
@@ -102,19 +104,32 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(books_between_years[1].title == 'Emma')
         self.assertTrue(books_between_years[2].title == 'Omoo')
 
+
     def test_no_end_or_start_year(self):
         books_between_years = self.tiny_data_source.books_between_years(start_year = 'none', end_year = 'none')
-        self.assertTrue(len(books_between_years) == 10)
+        self.assertTrue(len(books_between_years) == 11)
         self.assertTrue(books_between_years[0].title == 'The Life and Opinions of Tristram Shandy, Gentleman')
         self.assertTrue(books_between_years[1].title == 'Emma')
         self.assertTrue(books_between_years[2].title == 'Omoo')
         self.assertTrue(books_between_years[3].title == 'And Then There Were None')
-        self.assertTrue(books_between_years[4].title == 'Neverwhere')
-        self.assertTrue(books_between_years[5].title == 'Thief of Time')
-        self.assertTrue(books_between_years[6].title == '1Q84')
-        self.assertTrue(books_between_years[7].title == 'Blackout')
-        self.assertTrue(books_between_years[8].title == 'Girls and Sex')
-        self.assertTrue(books_between_years[9].title == 'Boys and Sex')
+        self.assertTrue(books_between_years[4].title == 'Good Omens')
+        self.assertTrue(books_between_years[5].title == 'Neverwhere')
+        self.assertTrue(books_between_years[6].title == 'Thief of Time')
+        self.assertTrue(books_between_years[7].title == '1Q84')
+        self.assertTrue(books_between_years[8].title == 'Blackout')
+        self.assertTrue(books_between_years[9].title == 'Girls and Sex')
+        self.assertTrue(books_between_years[10].title == 'Boys and Sex')
+
+    def test_negative_years(self):
+        books_between_years = self.tiny_data_source.books_between_years(start_year = '-1900', end_year = '-90')
+        self.assertTrue(len(books_between_years) == 0)
+    
+    def test_multiple_authors(self):
+        books = self.tiny_data_source.books(search_text = 'Good')
+        self.assertTrue(len(books) == 1)
+        self.assertTrue(books[0].authors == 'Neil Gaiman (1960-) and Terry Pratchett (1948-2015)')
+    
+        
         
 if __name__ == '__main__':
     unittest.main()

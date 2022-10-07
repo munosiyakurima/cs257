@@ -5,6 +5,8 @@
 
     For use in the "books" assignment at the beginning of Carleton's
     CS 257 Software Design class, Fall 2022.
+
+    Revised by Muno Siyakurima and Kyle Machalec
 '''
 
 import csv
@@ -24,6 +26,7 @@ class Author:
         return self.surname == other.surname and self.given_name == other.given_name
     
     def __lt__(self, other):
+        '''Sorts by surname otherwise if they are the same it compares their given name and sorts them alphabetically.'''
         if self.surname < other.surname:
             return True
         if self.surname == other.surname and self.given_name < other.given_name:
@@ -31,6 +34,7 @@ class Author:
         return False
     
     def __hash__(self):
+        '''Used to check if surname and given name already exist in the set'''
         return hash(self.surname + self.given_name)
 
 class Book:
@@ -48,6 +52,7 @@ class Book:
         return self.title == other.title
     
     def __lt__(self, other):
+        '''Sorts the book titles alphabetically'''
         return self.title < other.title
 
 class BooksDataSource:
@@ -74,20 +79,18 @@ class BooksDataSource:
         with open(books_csv_file_name) as f:
             reader = csv.reader(f)
             for row in reader:
-                book = Book(row[0], row[1], row[2])
-                #print(book.authors)
+                book = Book(row[0], row[1], row[2]) #Makes the Book object with row[0] = title, row[1] = publication_year and row[2] = authors
                 BooksDataSource.books_list.append(book)
-                split_authors = row[2].split(' and ')
-                #print(split_authors)
+                split_authors = row[2].split(' and ') # splits string of potentially multiple authors into individual authors
                 for a in split_authors:
                     split_name = a.split()
-                    if len(split_name) == 3:
+                    if len(split_name) == 3: #If author has one surname
                         split_dates = split_name[2].split('-')
                         author = Author(split_name[1], split_name[0], split_dates[0][-4:], split_dates[1][:4])
                         BooksDataSource.authors_list.add(author)
-                    elif len(split_name) == 4:
+                    elif len(split_name) == 4: #If author has two surnames
                         split_dates = split_name[3].split('-')
-                        author = Author(split_authors[1] + " " + split_name[2], split_name[0], split_dates[0][-4:], split_dates[1][:4])
+                        author = Author(split_name[1] + " " + split_name[2], split_name[0], split_dates[0][-4:], split_dates[1][:4])
                         BooksDataSource.authors_list.add(author)
 
     
@@ -130,9 +133,9 @@ class BooksDataSource:
                     books_returned.append(book)
         
         if sort_by == 'year':
-            books_returned = sorted(books_returned, key = attrgetter('publication_year', 'title'))
+            books_returned = sorted(books_returned, key = attrgetter('publication_year', 'title')) #Sorts by publication year and if there are ties, sorts by title
         else:
-            books_returned = sorted(books_returned, key = attrgetter('title', 'publication_year'))
+            books_returned = sorted(books_returned, key = attrgetter('title', 'publication_year'))  #Sorts by title and if there are ties, sorts by publication year
 
         return books_returned
 
@@ -166,16 +169,4 @@ class BooksDataSource:
                 if book.publication_year <= end_year and book.publication_year >= start_year:
                     publication_books.append(book)
             
-        return sorted(publication_books, key = attrgetter('publication_year', 'title'))
-
-def main():
-    booksource = BooksDataSource('tinybooks.csv')
-
-    
-
-  
-
-
-if __name__ == '__main__':
-    main()
-    exit()
+        return sorted(publication_books, key = attrgetter('publication_year', 'title')) #Sorts by publication year and if there are ties, sorts by title
