@@ -1,15 +1,10 @@
 import csv
 
 '''this program gets the source data, which are files from Kaggle and then reads
-them to separate files called athletes and noc_regions'''
-#read the athlete events csv file
-#read the noc csv file
-#create files to hold the csv files read off the kaggle versions
-#
+them to separate files called athletes, noc_regions, event_categories, events, games and athlete_medals'''
 
 
-# (1) Create a dictionary that maps athlete_id -> athlete_name
-#       and then save the results in athletes.csv
+
 athletes = {}
 with open('athlete_events.csv') as original_data_file,\
     open('athletes.csv', 'w', newline='', encoding='utf-8') as athletes_file:
@@ -25,8 +20,7 @@ with open('athlete_events.csv') as original_data_file,\
             athletes[athlete_id] = athlete_name
             writer.writerow([athlete_id, athlete_name, athletes_noc, athletes_region])
 
-# (2) Create a dictionary that maps event_name -> event_id
-#       and then save the results in events.csv
+
 event_categories = {}
 with open('athlete_events.csv') as original_data_file,\
         open('event_categories.csv', 'w', newline='', encoding='utf-8') as event_categories_file:
@@ -40,8 +34,7 @@ with open('athlete_events.csv') as original_data_file,\
             event_categories[category_name] = category_id
             writer.writerow([category_id, category_name])
 
-# (3) For each row in the original athlete_events.csv file, build a row
-#       for our new event_results.csv table
+
 events = {}
 with open('athlete_events.csv') as original_data_file,\
         open('events.csv', 'w', newline='', encoding='utf-8') as events_file:
