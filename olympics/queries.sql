@@ -12,4 +12,9 @@ AND athlete_medals.event_id = events.event_id
 AND athletes.athlete_name LIKE 'Gregory Efthimios%'
 ORDER BY games.games_year_season;
  
-
+SELECT athletes.athletes_noc, count(medal) AS golds 
+FROM athletes,athlete_medals 
+WHERE athletes.athlete_id = athlete_medals.athlete_id 
+AND medal='Gold' 
+GROUP BY athletes.athletes_noc 
+ORDER BY golds desc;

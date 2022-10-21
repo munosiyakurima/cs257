@@ -74,9 +74,10 @@ with open('athlete_events.csv') as original_data_file,\
     for row in reader:
         athlete_id = row[0]
         medal = row[14]
+        noc = row[7]
         if (athlete_id and event_id and games_id) not in athlete_medals:
             medals_id = len(athlete_medals) + 1
-            athlete_medals[athlete_id, event_id, games_id, medal] = medals_id
+            athlete_medals[athlete_id, event_id, games_id, medal, noc] = medals_id
             games_id = games[row[8]] 
             event_id = events[row[13]]
-            writer.writerow([medals_id, athlete_id, event_id, games_id, medal])
+            writer.writerow([medals_id, athlete_id, event_id, games_id, medal, noc])

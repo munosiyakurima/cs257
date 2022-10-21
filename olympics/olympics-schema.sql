@@ -41,5 +41,6 @@
         athlete_id INTEGER,
         event_id INTEGER,
         games_id INTEGER,
-        medal TEXT
+        medal TEXT,
+        noc TEXT
     );
